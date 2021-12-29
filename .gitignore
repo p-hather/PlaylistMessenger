@@ -3,3 +3,5 @@
 venv/
 *.ipynb
 .ipynb_checkpoints/
+dev/
+__pycache__/

@@ -36,20 +36,24 @@ def get_track(search_term, pages=5):
     return None
 
 
-def offset_index(list_obj, index, max_offset=3):
-    print(f"Offsetting list from index {index}, item '{list_obj[index]}'")
-    offset_lists = []
-    for n in range(2, max_offset+1):
-      for i in range(1, n+1):
-        start = index+(i-n)
-        end = index+i
-        if start >= 0 and end <= len(list_obj):
-          offset_list = list_obj[start:end]
-          offset_lists.append({
-              "back": index-start,
-              "forward": (end-index)-1,
-              "sequence": offset_list})
-    return offset_lists
+def offset_index(list_obj, start_index, max_offset=2):
+    """
+    Splits a list into slices, looking ahead from a given index
+    """
+
+    max_index = min(start_index+max_offset, len(list_obj)-1)
+    if start_index == max_index:
+        print(f'Given index ({start_index}) is the end of the list, unable to offset')
+        return
+    
+    print(f"Attempting to offset list from index {start_index}, item '{list_obj[start_index]}'")
+    slices = []
+    for end_index in range(start_index+2, max_index+2):  # +2 to account for range and list indexing
+        slices.append({
+            "offset": (end_index-start_index)-1,
+            "slice": list_obj[start_index:end_index]
+        })
+    return slices
 
 
 def clean_input(sentence):
@@ -72,27 +76,20 @@ def build_sentence(sentence):
             skip -= 1
             continue
 
-        print(f'Word {n} - {word}')
         track = get_track(word)
 
         if not track:
             word_offsets = offset_index(words, n)
 
-            for offset in word_offsets:
-                track = get_track(' '.join(offset['sequence']))
+            try:
+                for offset in word_offsets:
+                    track = get_track(' '.join(offset['slice']))
 
-                if track:
-                    print(offset)
-
-                    if offset['back']:
-                        print(f"Attempting to delete items {n-offset['back']}:{n} - {items[n-offset['back']:n]}")
-                        del items[n-offset['back']:n]
-                        print(f'New items looks like:\n{items}')
-
-                    if offset['forward']:
-                        skip = offset['forward']  # Skip the next n iterations
-
-                    break
+                    if track:
+                        skip = offset['offset']  # Skip the next n iterations
+                        break
+            except TypeError as e:
+                print(f"Error raised: {e} - likely caused by attempting to offset last item in list")
         
         if track:
             items.append(track)
@@ -102,7 +99,7 @@ def build_sentence(sentence):
     return items
 
 sentence = '''
-fall in love with eyes closed
+You need to let the little things that would ordinarily bore you suddenly thrill you.
 '''
 
 tracks = build_sentence(sentence)

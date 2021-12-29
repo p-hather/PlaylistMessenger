@@ -13,7 +13,7 @@ def get_track(search_term, pages=5):
 
     for page in range(0, 50*pages, 50):  # maximum of 50 results per search - search more than once if necessary
         try:
-            results = client.search(q=f'track:"{search_term}"', type='track', limit=50, offset=page)
+            results = client.search(q=search_term, type='track', limit=50, offset=page)
 
             for n, item in enumerate(results['tracks']['items']):
                 if item['name'].lower() == search_term.lower():

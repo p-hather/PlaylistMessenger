@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Playlist Messenger for Spotify</title>
     <!-- CSS -->
-    <link rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://sp-bootstrap.global.ssl.fastly.net/8.0.0/sp-bootstrap.min.css">
     <!-- Favicon -->
     <!-- <link rel="icon" href="icon.png">  -->
 </head>
@@ -17,14 +18,21 @@
       <br>
       <form method="POST">
         <div class="form-group">
+          <textarea class="form-control" name="title" id="title" rows="1" placeholder="Playlist Title" minlength=2 maxlength=100 required style="width: 50%; margin: auto;"></textarea>
+          <br>
           <textarea class="form-control" name="message" id="message" rows="3" placeholder="Your Message" minlength=2 maxlength=100 required style="width: 50%; margin: auto;"></textarea>
         </div>
         <br>
         <button class="btn btn-success btn-lg" type="submit">Create a Playlist</button>
       </form>
       <!-- <h5>Output</h5>   -->
-      <!-- <p id="output">{{output}}</p>
-      <iframe src="{{link}}" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> -->
+      <br>
+      <p id="output">{{output}}</p>
+      <br>
+      <!-- embed player -->
+      {% if playlist_id != '' %}
+      <iframe src="https://open.spotify.com/embed/playlist/{{playlist_id}}?utm_source=generator&theme=0" width="50%" height="280" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+      {% endif %}
     </div>
 </body> 
 </html>

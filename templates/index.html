@@ -3,32 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playlist Messenger for Spotify</title>
+    <title>Playlist Messenger</title>
     <!-- CSS -->
-    <!-- <link rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css"> -->
-    <link rel="stylesheet" href="https://sp-bootstrap.global.ssl.fastly.net/8.0.0/sp-bootstrap.min.css">
+    <!-- <link rel=stylesheet" href="../static/style.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <!-- Favicon -->
-    <!-- <link rel="icon" href="icon.png">  -->
+    <link rel="icon" href="https://www.scdn.co/i/_global/favicon.png"> 
 </head>
 <body>
-    <div class="container text-center">
-        <!-- <br>
-        <img src="https://media3.giphy.com/media/GyKCVW91R83Ek/giphy.gif"> -->
-      <h1 style="margin-top: 5%;">Playlist Messenger for Spotify</h1>
-      <br>
+    <div class="main-container">
+        
+      <h1 class='main-header'>Playlist Messenger</h1>
+      <!-- <h1 style="margin-top: 5%;">Playlist Messenger for Spotify</h1> -->
       <form method="POST">
         <div class="form-group">
-          <textarea class="form-control" name="title" id="title" rows="1" placeholder="Playlist Title" minlength=2 maxlength=100 required style="width: 50%; margin: auto;"></textarea>
+          <textarea class="form" name="title" id="title" rows="1" placeholder="Playlist Title" minlength=2 maxlength=100 required style="width: 40%; margin: auto;"></textarea>
           <br>
-          <textarea class="form-control" name="message" id="message" rows="3" placeholder="Your Message" minlength=2 maxlength=100 required style="width: 50%; margin: auto;"></textarea>
+          <textarea class="form" name="message" id="message" rows="3" placeholder="Your Message" minlength=2 maxlength=100 required style="width: 40%; margin: auto;"></textarea>
         </div>
-        <br>
-        <button class="btn btn-success btn-lg" type="submit">Create a Playlist</button>
+        <button class="submit-btn" type="submit">Create a Playlist</button>
       </form>
       <!-- <h5>Output</h5>   -->
-      <br>
       <p id="output">{{output}}</p>
-      <br>
       <!-- embed player -->
       {% if playlist_id != '' %}
       <iframe src="https://open.spotify.com/embed/playlist/{{playlist_id}}?utm_source=generator&theme=0" width="50%" height="280" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>

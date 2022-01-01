@@ -11,7 +11,7 @@ html {
     padding-left: 50px;
 }
 .main-header {
-    font-size:45px;
+    font-size:55px;
     font-weight: 900;
     letter-spacing: -.02em;
     line-height: 1.2;
@@ -28,7 +28,7 @@ html {
     background-color: #fff;
     background-image: none;
     border: 1px solid #d9dadc;
-    border-radius: 0;
+    border-radius: 5px;
     resize: none;
 }
 .submit-btn {
@@ -49,10 +49,10 @@ html {
     font-weight: 700;
     text-align: center;
     vertical-align: middle;
-    margin: 30px;
+    margin: 20px;
 }
 
-#output {
-    padding-top: 10px;
-    padding-bottom: 10px;
+.output {
+    padding: 10px;
+    margin: 25px;
 }

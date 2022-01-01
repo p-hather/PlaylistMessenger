@@ -1,23 +1,48 @@
 from dotenv import load_dotenv
 import string
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyOAuth
 
 load_dotenv()
 
 
-class PlaylistMessenger():
-    
-    def __init__(self, client, message):
-        self.client = client
-        self.message = message
+class PlaylistMessenger:
 
-    def get_track(self, search_term, pages=5):
+    def __init__(self, client, playlist_name, message):
+        self.client = client
+        self.user_id = self.client.me()['id']
+        self.playlist_name = playlist_name
+        self.message = message
+        self.all_words = []
+        self.not_found_words = []
+        self.playlist_id = None
+        self.status = None
+
+    def run(self):
+        tracks = self.get_tracks()
+        if tracks:
+            self.build_playlist(tracks)
+            self.status = f'Done! Found {len(self.all_words)-len(self.not_found_words)}/{len(self.all_words)} words'
+        else:
+            print('No tracks found')
+            self.status = 'Could not find any tracks'
+
+        print('Done')
+    
+    def build_playlist(self, tracks):
+        print(f'Creating playlist with name: {self.playlist_name}')
+        playlist = self.client.user_playlist_create(user=self.user_id, name=self.playlist_name) # TODO add description
+        self.playlist_id = playlist['id']
+
+        print(f'Attempting to add {len(tracks)} tracks')
+        self.client.user_playlist_add_tracks(user=self.user_id, playlist_id=self.playlist_id, tracks=tracks)
+
+    def find_track(self, search_term, pages=5):
         print(f"Looking for a track that matches '{search_term}'")
 
         for page in range(0, 50*pages, 50):  # maximum of 50 results per search - search more than once if necessary
             try:
-                results = client.search(q=search_term, type='track', limit=50, offset=page)
+                results = self.client.search(q=search_term, type='track', limit=50, offset=page)
 
                 for n, item in enumerate(results['tracks']['items']):
                     if item['name'].lower() == search_term.lower():
@@ -26,11 +51,7 @@ class PlaylistMessenger():
                         uri = item['uri']  # ['id'] also available
                         print(f"Found matching track on iteration {page+n+1} - {name} by {', '.join(artists)}")
             
-                        return {
-                            'artists': artists,
-                            'name': name,
-                            'uri': uri
-                        }
+                        return uri
 
             except spotipy.SpotifyException:
                 print(f'Spotipy client raised error on iteration {page+n+1} - likely exceeded page limit')
@@ -68,26 +89,26 @@ class PlaylistMessenger():
         return [word.strip() for word in clean_message.split(' ') if word != '']  # split, strip leading/trailing whitespace
 
 
-    def build_playlist(self):
-        words = self.process_message()
+    def get_tracks(self):
+        self.all_words = self.process_message()
         skip = 0
 
         items = []
-        for n, word in enumerate(words):
+        for n, word in enumerate(self.all_words):
 
             if skip:
                 print(f'Skipping word {n} - {word}')
                 skip -= 1
                 continue
 
-            track = self.get_track(word)
+            track = self.find_track(word)
 
             if not track:
-                word_offsets = self.offset_index(words, n)
+                word_offsets = self.offset_index(self.all_words, n)
 
                 try:
                     for offset in word_offsets:
-                        track = self.get_track(' '.join(offset['slice']))
+                        track = self.find_track(' '.join(offset['slice']))
 
                         if track:
                             skip = offset['offset']  # Skip the next n iterations
@@ -100,15 +121,21 @@ class PlaylistMessenger():
                 items.append(track)
             else:
                 print(f'Could not find a track with the name {word}')
+                self.not_found_words.append(word)
         
         return items
 
 
 if __name__ == '__main__':
-    message = '''
-    You need to let the little things that would ordinarily bore you suddenly thrill you.
-    '''
-    client = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
-    pm = PlaylistMessenger(client, message)
-    pm.build_playlist()
+    scope='user-library-read playlist-modify-private playlist-modify-public'
+    client = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+
+    # client = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+    message = '''
+    You need to let the little things fghjkiuy thrill you.
+    '''
+
+    pm = PlaylistMessenger(client, 'test playlist 2', message)
+    # pm.build_playlist()
+    pm.run()

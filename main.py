@@ -15,16 +15,23 @@ SCOPE = 'playlist-modify-public'
 app = Flask(__name__, template_folder='html')
 app.secret_key = os.environ.get('FLASK_KEY')
 
-# authorization-code-flow Step 1: application requests authorization
-# the user logs in and authorizes access
+
 @app.route("/")
 def login():
+    """
+    authorization-code-flow - Step 1
+    Redirect to Spotify Auth page, request authorisation from user.
+    """
     auth_url = f'https://accounts.spotify.com/authorize?client_id={CLIENT_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={SCOPE}'
     return redirect(auth_url)
 
-# authorization-code-flow Step 2: application requests refresh and access tokens and Spotify returns them
+
 @app.route("/callback")
 def api_callback(): 
+    """
+    authorization-code-flow - Step 2
+    Application requests refresh and access tokens, Spotify returns them
+    """
     session.clear()
     code = request.args.get('code')
 
@@ -44,9 +51,13 @@ def api_callback():
     # redirect to index.html after authorization is done
     return redirect("index")
 
-# authorization-code-flow Step 3: use the access token to access the Spotify Web API
+
 @app.route('/index', methods=['POST', 'GET'])
 def index():
+    """
+    authorization-code-flow - Step 3
+    Use the access token from the previous step to access the Spotify API
+    """
     output = ''
     playlist_id = ''
     

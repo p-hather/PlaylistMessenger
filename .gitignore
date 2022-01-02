@@ -7,3 +7,6 @@ dev/
 __pycache__/
 .DS_Store
 *.log
+# Google Cloud App Engine deployment
+app.yaml
+.gcloudignore

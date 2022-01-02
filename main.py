@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, redirect, session
-import spotipy, os, requests
 from dotenv import load_dotenv
+import logging
+from flask import Flask, render_template, request, redirect, session
+import spotipy
+import os
+import requests
 from playlist import PlaylistMessenger
 
 load_dotenv()
@@ -10,6 +13,9 @@ CLIENT_ID = os.environ.get('CLIENT_ID')
 CLIENT_SECRET= os.environ.get('CLIENT_SECRET')
 REDIRECT_URI= os.environ.get('REDIRECT_URI')
 SCOPE = 'playlist-modify-public'
+
+logging.basicConfig(level=logging.INFO, filename="playlist_messenger.log", filemode="a+",
+                    format="%(asctime)-15s %(levelname)-8s %(message)s")
 
 # create Flask app
 app = Flask(__name__, template_folder='html')
@@ -30,7 +36,7 @@ def login():
 def api_callback(): 
     """
     authorization-code-flow - Step 2
-    Application requests refresh and access tokens, Spotify returns them
+    Application requests refresh and access tokens, Spotify returns them.
     """
     session.clear()
     code = request.args.get('code')
@@ -69,14 +75,14 @@ def index():
 
         # instantiate python class and run process
         try:
-            print('Instantiating Python class')
+            logging.info('Instantiating Python class')
             pm = PlaylistMessenger(client, title, message)
             pm.run()
             output = pm.status
-            print(f'Received status from Python script: {output}')
+            logging.info(f'Received status from Python script: {output}')
             playlist_id = pm.playlist_id
         except:
-            print('Error occurred in Python script')
+            logging.info('Error occurred in Python script')
             output = 'An error occurred'
     
     return render_template('index.html', output=output, playlist_id=playlist_id)

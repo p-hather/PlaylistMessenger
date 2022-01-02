@@ -1,9 +1,10 @@
 from dotenv import load_dotenv
+import logging
 import string
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
-load_dotenv()
+load_dotenv()  # Used for dev only
 
 
 class PlaylistMessenger:
@@ -50,7 +51,7 @@ class PlaylistMessenger:
         for n, word in enumerate(self.all_words):
 
             if skip:
-                print(f'Skipping word {n} - {word}')
+                logging.info(f'Skipping word {n} - {word}')
                 skip -= 1
                 continue
 
@@ -68,12 +69,12 @@ class PlaylistMessenger:
                             break
 
                 except TypeError as e:
-                    print(f"Error raised: {e} - likely caused by attempting to offset last item in list")
+                    logging.info(f"Error raised: {e} - likely caused by attempting to offset last item in list")
             
             if track:
                 items.append(track)
             else:
-                print(f'Could not find a track with the name {word}')
+                logging.info(f'Could not find a track with the name {word}')
                 self.not_found_words.append(word)
         
         return items
@@ -82,7 +83,7 @@ class PlaylistMessenger:
         """
         Searches the Spotify API for a track matching a given search term - returns the track URI when found.
         """
-        print(f"Looking for a track that matches '{search_term}'")
+        logging.info(f"Looking for a track that matches '{search_term}'")
 
         for page in range(0, 50*pages, 50):  # maximum of 50 results per search - search more than once if necessary
             try:
@@ -93,15 +94,15 @@ class PlaylistMessenger:
                         artists = [artist['name'] for artist in item['artists']]
                         name = item['name']
                         uri = item['uri']  # ['id'] also available
-                        print(f"Found matching track on iteration {page+n+1} - {name} by {', '.join(artists)}")
+                        logging.info(f"Found matching track on iteration {page+n+1} - {name} by {', '.join(artists)}")
             
                         return uri
 
             except spotipy.SpotifyException:
-                print(f'Spotipy client raised error on iteration {page+n+1} - likely exceeded page limit')
+                logging.info(f'Spotipy client raised error on iteration {page+n+1} - likely exceeded page limit')
                 break
                 
-        print('No matching track found')
+        logging.info('No matching track found')
         return None
 
     def offset_index(self, list_obj, start_index, max_offset=2):
@@ -111,10 +112,10 @@ class PlaylistMessenger:
 
         max_index = min(start_index+max_offset, len(list_obj)-1)
         if start_index == max_index:
-            print(f'Given index ({start_index}) is the end of the list, unable to offset')
+            logging.info(f'Given index ({start_index}) is the end of the list, unable to offset')
             return
         
-        print(f"Attempting to offset list from index {start_index}, item '{list_obj[start_index]}'")
+        logging.info(f"Attempting to offset list from index {start_index}, item '{list_obj[start_index]}'")
         slices = []
         for end_index in range(start_index+2, max_index+2):  # +2 to account for range and list indexing
             slices.append({
@@ -127,12 +128,12 @@ class PlaylistMessenger:
         """
         Create an empty playlist and load the tracks.
         """
-        print(f'Creating playlist with name: {self.playlist_name}')
+        logging.info(f'Creating playlist with name: {self.playlist_name}')
         playlist = self.client.user_playlist_create(user=self.user_id, name=self.playlist_name) # TODO add description
         self.playlist_id = playlist['id']
-        print(f'Playlist ID is {self.playlist_id}')
+        logging.info(f'Playlist ID is {self.playlist_id}')
 
-        print(f'Attempting to add {len(tracks)} tracks')
+        logging.info(f'Attempting to add {len(tracks)} tracks')
         self.client.user_playlist_add_tracks(user=self.user_id, playlist_id=self.playlist_id, tracks=tracks)
 
     def run(self):
@@ -144,10 +145,10 @@ class PlaylistMessenger:
             self.build_playlist(tracks)
             self.status = f'Done! Found {len(self.all_words)-len(self.not_found_words)}/{len(self.all_words)} words'
         else:
-            print('No tracks found')
+            logging.info('No tracks found')
             self.status = 'Could not find any tracks'
 
-        print('Done')
+        logging.info('Done')
 
 
 if __name__ == '__main__':

@@ -11,8 +11,6 @@ CLIENT_SECRET= os.environ.get('CLIENT_SECRET')
 REDIRECT_URI= os.environ.get('REDIRECT_URI')
 SCOPE = 'playlist-modify-public'
 
-logging.basicConfig(level=logging.INFO, filename="playlist_messenger.log", filemode="a+",
-                    format="%(asctime)-15s %(levelname)-8s %(message)s")
 
 # create Flask app
 app = Flask(__name__, template_folder='html')

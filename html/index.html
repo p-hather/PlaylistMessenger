@@ -15,16 +15,16 @@
       <h1 class='main-header'>Playlist Messenger</h1>
       <form method="POST">
         <div class="form-group">
-          <textarea class="form" name="title" id="title" rows="1" placeholder="Playlist Title" minlength=2 maxlength=100 required style="width: 40%; margin: auto;"></textarea>
+          <textarea class="form" name="title" id="title" rows="1" placeholder="Playlist Title" minlength=2 maxlength=100 required style="width: 65%; margin: auto;"></textarea>
           <br>
-          <textarea class="form" name="message" id="message" rows="3" placeholder="Your Message" minlength=2 maxlength=100 required style="width: 40%; margin: auto;"></textarea>
+          <textarea class="form" name="message" id="message" rows="3" placeholder="Your Message" minlength=2 maxlength=100 required style="width: 65%; margin: auto;"></textarea>
         </div>
         <button class="submit-btn" type="submit">Create a Playlist</button>
       </form>
       <div class="output">{{output}}</div>
       <!-- embed player -->
       {% if playlist_id != '' %}
-      <iframe src="https://open.spotify.com/embed/playlist/{{playlist_id}}?utm_source=generator&theme=0" width="50%" height="280" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+      <iframe src="https://open.spotify.com/embed/playlist/{{playlist_id}}?utm_source=generator&theme=0" width="65%" height="280" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
       {% endif %}
     </div>
 </body> 

@@ -1,7 +1,6 @@
 import logging
 import string
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 
 
 class PlaylistMessenger:

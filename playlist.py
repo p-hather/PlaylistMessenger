@@ -1,10 +1,7 @@
-from dotenv import load_dotenv
 import logging
 import string
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-
-load_dotenv()  # Used for dev only
 
 
 class PlaylistMessenger:
@@ -149,17 +146,3 @@ class PlaylistMessenger:
             self.status = 'Could not find any tracks'
 
         logging.info('Done')
-
-
-if __name__ == '__main__':
-
-    scope='playlist-modify-public'
-    client = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
-    # client = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
-
-    message = '''
-    this is a test playlist
-    '''
-
-    pm = PlaylistMessenger(client, 'test playlist', message)
-    pm.run()

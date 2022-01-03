@@ -1,12 +1,9 @@
-from dotenv import load_dotenv
 import logging
 from flask import Flask, render_template, request, redirect, session
 import spotipy
 import os
 import requests
 from playlist import PlaylistMessenger
-
-load_dotenv()
 
 
 CLIENT_ID = os.environ.get('CLIENT_ID')

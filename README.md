@@ -10,6 +10,8 @@ The backend is purely Python based - this uses Spotipy package to call the Spoti
 
 The frontend is Flask alongside simple HTML and CSS.
 
+Auth is handled by redirecting the user to the Spotify app authorisation page, and passing a token back to Spotipy to create a client instance.
+
 ### Deployment
 
 The beta app is currently deployed using Google Cloud App Engine, although the config files have not been included in this repository. A simple guide can be found for this [here](https://medium.com/@dmahugh_70618/deploying-a-flask-app-to-google-app-engine-faa883b5ffab).

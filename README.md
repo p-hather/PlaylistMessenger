@@ -22,3 +22,15 @@ For development purposes, the app can be run locally (simply run `main.py` and m
 * All packages in `requirements.txt` installed
 * A Spotify app created
 * A `.env` file created as per the example, and stored in the same directory as the other files
+
+### Screenshots
+<img width="750" alt="Screenshot 2022-01-09 at 18 23 27" src="https://user-images.githubusercontent.com/75444929/148695267-27f90393-06ae-4e1f-8821-4e49f33faadb.png">
+
+<img width="750" alt="Screenshot 2022-01-09 at 18 20 09" src="https://user-images.githubusercontent.com/75444929/148695285-5002ad07-a2cf-490a-a176-a9184a6cf5f7.png">
+
+<img width="750" alt="Screenshot 2022-01-09 at 18 20 37" src="https://user-images.githubusercontent.com/75444929/148695306-79663944-13b2-4bf4-9a84-573508e19711.png">
+
+
+
+
+
